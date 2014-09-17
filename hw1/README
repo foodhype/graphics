@@ -1,0 +1,3 @@
+g++ main.c bmp.c bmp.h && ./a.out smallFlower.bmp smallFlowerOilPainting.bmp
+
+I decided to take this class to apply linear algebra and other techniques that I would otherwise forget. I've taken enough classes now that it only makes sense for me to take courses covering material that I wouldn't necessarily learn in industry. Every time I take a class out of my comfort zone, I learn techniques that I can apply in unexpected ways in other fields. Graphics is new to me. I hope to learn techniques I can apply to other fields and hopefully spark an interest in graphics.

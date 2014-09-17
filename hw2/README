@@ -1,0 +1,8 @@
+# Name: Brian Schmitz
+# EID: bns583
+# CS ID: bschmitz
+
+# Running draw_polygon
+make run
+
+# Click to place each vertex, and use spacebar to draw polygon.
