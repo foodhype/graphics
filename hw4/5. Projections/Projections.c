@@ -271,36 +271,50 @@ void mouse_func(int btn, int state, int x, int y) {
 /*
  *  GLUT calls this routine when an arrow key is pressed
  */
-void special(int key, int x, int y)
+void special(int key, int x, int y, int idx)
 {
-    for (int i = 0; i < 4; i++) {
-        //  Right arrow key - increase angle by 5 degrees
-        if (key == GLUT_KEY_RIGHT)
-            th[i] += 5;
-        //  Left arrow key - decrease angle by 5 degrees
-        else if (key == GLUT_KEY_LEFT)
-            th[i] -= 5;
-        //  Up arrow key - increase elevation by 5 degrees
-        else if (key == GLUT_KEY_UP)
-            ph[i] += 5;
-        //  Down arrow key - decrease elevation by 5 degrees
-        else if (key == GLUT_KEY_DOWN)
-            ph[i] -= 5;
-        //  PageUp key - increase dim
-        else if (key == GLUT_KEY_PAGE_UP)
-            dim[i] += 0.1;
-        //  PageDown key - decrease dim
-        else if (key == GLUT_KEY_PAGE_DOWN && dim[i] > 1)
-            dim[i] -= 0.1;
-        //  Keep angles to +/-360 degrees
-        th[i] %= 360;
-        ph[i] %= 360;
+    //  Right arrow key - increase angle by 5 degrees
+    if (key == GLUT_KEY_RIGHT)
+        th[idx] += 5;
+    //  Left arrow key - decrease angle by 5 degrees
+    else if (key == GLUT_KEY_LEFT)
+        th[idx] -= 5;
+    //  Up arrow key - increase elevation by 5 degrees
+    else if (key == GLUT_KEY_UP)
+        ph[idx] += 5;
+    //  Down arrow key - decrease elevation by 5 degrees
+    else if (key == GLUT_KEY_DOWN)
+        ph[idx] -= 5;
+    //  PageUp key - increase dim
+    else if (key == GLUT_KEY_PAGE_UP)
+        dim[idx] += 0.1;
+    //  PageDown key - decrease dim
+    else if (key == GLUT_KEY_PAGE_DOWN && dim[idx] > 1)
+        dim[idx] -= 0.1;
+    //  Keep angles to +/-360 degrees
+    th[idx] %= 360;
+    ph[idx] %= 360;
 
-        //  Update projection
-        Project(i);
-    }
+    //  Update projection
+    Project(idx);
     //  Tell GLUT it is necessary to redisplay the scene
     glutPostRedisplay();
+}
+
+void special1(int key, int x, int y) {
+    special(key, x, y, 0);
+}
+
+void special2(int key, int x, int y) {
+    special(key, x, y, 1);
+}
+
+void special3(int key, int x, int y) {
+    special(key, x, y, 2);
+}
+
+void special4(int key, int x, int y) {
+    special(key, x, y, 3);
 }
 
 int windowIdAt(int x, int y) {
@@ -322,47 +336,60 @@ int windowIdAt(int x, int y) {
 /*
  *  GLUT calls this routine when a key is pressed
  */
-void key(unsigned char ch,int x,int y)
+void key(unsigned char ch,int x,int y, int idx)
 {
-    for (int i = 0; i < 4; i++) {
-        //  Exit on ESC
-        if (ch == 27)
-            exit(0);
-        //  Reset view angle
-        else if (ch == '0')
-            th[i] = ph[i] = 0;
-        //  Toggle axes
-        else if (ch == 'a' || ch == 'A')
-            axes[i] = 1 - axes[i];
-        //  Switch display mode
-        else if (ch == 'm' || ch == 'M')
-            mode[i] = 1 - mode[i];
-        //  Change field of view angle
-        else if (ch == '-' && ch>1)
-            fov[i]--;
-        else if (ch == '+' && ch<179)
-            fov[i]++;
-        //  Reproject
-        Project(i);
-    }
+    //  Exit on ESC
+    if (ch == 27)
+        exit(0);
+    //  Reset view angle
+    else if (ch == '0')
+        th[idx] = ph[idx] = 0;
+    //  Toggle axes
+    else if (ch == 'a' || ch == 'A')
+        axes[idx] = 1 - axes[idx];
+    //  Switch display mode
+    else if (ch == 'm' || ch == 'M')
+        mode[idx] = 1 - mode[idx];
+    //  Change field of view angle
+    else if (ch == '-' && ch>1)
+        fov[idx]--;
+    else if (ch == '+' && ch<179)
+        fov[idx]++;
+    //  Reproject
+    Project(idx);
     //  Tell GLUT it is necessary to redisplay the scene
     glutPostRedisplay();
 }
+
+void key1(unsigned char ch, int x, int y) {
+    key(ch, x, y, 0);
+}
+
+void key2(unsigned char ch, int x, int y) {
+    key(ch, x, y, 1);
+}
+
+void key3(unsigned char ch, int x, int y) {
+    key(ch, x, y, 2);
+}
+
+void key4(unsigned char ch, int x, int y) {
+    key(ch, x, y, 3);
+}
+
 
 /*
  *  GLUT calls this routine when the window is resized
  */
 void reshape(int width, int height, int idx)
 {
-    for (int i = 0; i <= 4; i++) {
-        //  Ratio of the width to the height of the window
-        asp = (height>0) ? (double)width/height : 1;
-        //  Set the viewport to the entire window
-        glViewport(0, 0, width, height);
+    //  Ratio of the width to the height of the window
+    asp = (height>0) ? (double)width/height : 1;
+    //  Set the viewport to the entire window
+    glViewport(0, 0, width, height);
 
-        //  Set projection
-        Project(idx);
-    } 
+    //  Set projection
+    Project(idx);
 }
 
 
@@ -425,9 +452,9 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display1);
     glutReshapeFunc(reshape1);
-    glutSpecialFunc(special);
+    glutSpecialFunc(special1);
     glutMouseFunc(mouse_func);
-    glutKeyboardFunc(key);
+    glutKeyboardFunc(key1);
     glEnable(GL_DEPTH_TEST);
 
     window2 = glutCreateSubWindow(main_window, 500, 0, 1000, 500);
@@ -435,9 +462,9 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display2);
     glutReshapeFunc(reshape2);
-    glutSpecialFunc(special);
+    glutSpecialFunc(special2);
     glutMouseFunc(mouse_func);
-    glutKeyboardFunc(key);
+    glutKeyboardFunc(key2);
     glEnable(GL_DEPTH_TEST);
 
     window3 = glutCreateSubWindow(main_window, 0, 500, 500, 1000);
@@ -445,9 +472,9 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display3);
     glutReshapeFunc(reshape3);
-    glutSpecialFunc(special);
+    glutSpecialFunc(special3);
     glutMouseFunc(mouse_func);
-    glutKeyboardFunc(key);
+    glutKeyboardFunc(key3);
     glEnable(GL_DEPTH_TEST);
 
     window4 = glutCreateSubWindow(main_window, 500, 500, 1000, 1000);
@@ -455,9 +482,9 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display4);
     glutReshapeFunc(reshape4);
-    glutSpecialFunc(special);
+    glutSpecialFunc(special4);
     glutMouseFunc(mouse_func);
-    glutKeyboardFunc(key);
+    glutKeyboardFunc(key4);
     glEnable(GL_DEPTH_TEST);
 
     glutPostRedisplay();
