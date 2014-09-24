@@ -39,7 +39,7 @@ PFNGLWINDOWPOS2IPROC glWindowPos2i;
 
 int axes[4] = {0, 0, 0, 0};       //  Display axes
 int mode[4] = {0, 0, 0, 0};       //  Projection mode
-int th[4] = {0, 0, 0, 0};         //  Azimuth of view angle
+int th[4] = {0, 0, 0, 0};         //  Azimuth of view anglint
 int ph[4] = {0, 0, 0, 0};         //  Elevation of view angle
 int fov[4] = {55, 55, 55, 55};       //  Field of view (for perspective)
 double asp = 1.0;     //  Aspect ratio
@@ -248,7 +248,7 @@ void main_window_display()
 {
 }
 
-void idleloop() {
+void idleLoop() {
     glutSetWindow(window1);
     //display1();
     glutPostRedisplay();
@@ -301,6 +301,12 @@ void special(int key, int x, int y, int idx)
     glutPostRedisplay();
 }
 
+void main_special(int key, int x, int y) {
+    for (int i = 0; i < 4; i++) {
+        special(key, x, y, i);
+    }
+}
+
 void special1(int key, int x, int y) {
     special(key, x, y, 0);
 }
@@ -317,21 +323,6 @@ void special4(int key, int x, int y) {
     special(key, x, y, 3);
 }
 
-int windowIdAt(int x, int y) {
-    if (x >= 0 && x < 500) {
-        if (y >= 0 && y < 500) {
-            return window1;
-        } else if (y >= 500 && y < 1000) {
-            return window3;
-        }
-    } else if (x >= 500 && x < 1000) {
-        if (y >= 0 && y < 500) {
-            return window2;
-        } else if (y >= 500 && y < 1000) {
-            return window4;
-        }
-    }
-}
 
 /*
  *  GLUT calls this routine when a key is pressed
@@ -386,13 +377,24 @@ void reshape(int width, int height, int idx)
     //  Ratio of the width to the height of the window
     asp = (height>0) ? (double)width/height : 1;
     //  Set the viewport to the entire window
-    glViewport(0, 0, width, height);
-
+    switch (idx) {
+        case 0:
+            glViewport(0, 0, width, height);
+            break;
+        case 1:
+            glViewport(-250, 0, width, height);
+            break;
+        case 2:
+            glViewport(120, 500, width / 2, height / 2);
+            break;
+        case 3:
+            glViewport(0, 500, width / 2, height / 2);
+            break;
+    }
+            
     //  Set projection
     Project(idx);
 }
-
-
 
 /*
  *  GLUT calls this routine when the window is resized
@@ -402,7 +404,6 @@ void reshape1(int width,int height)
     reshape(width, height, 0);
 }
 
-
 /*
  *  GLUT calls this routine when the window is resized
  */
@@ -410,7 +411,6 @@ void reshape2(int width,int height)
 {
     reshape(width, height, 1);
 }
-
 
 /*
  *  GLUT calls this routine when the window is resized
@@ -420,7 +420,6 @@ void reshape3(int width,int height)
     reshape(width, height, 2);
 }
 
-
 /*
  *  GLUT calls this routine when the window is resized
  */
@@ -428,7 +427,6 @@ void reshape4(int width,int height)
 {
     reshape(width, height, 3);
 }
-
 
 /*
  *  Start up GLUT and tell it what to do
@@ -445,6 +443,7 @@ int main(int argc,char* argv[])
     glutInitWindowSize(1000, 1000);
     main_window = glutCreateWindow("Projections");
     glutDisplayFunc(main_window_display);
+    glutSpecialFunc(main_special);
     glEnable(GL_DEPTH_TEST);
 
     window1 = glutCreateSubWindow(main_window, 0, 0, 500, 500);
@@ -452,7 +451,6 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display1);
     glutReshapeFunc(reshape1);
-    glutSpecialFunc(special1);
     glutMouseFunc(mouse_func);
     glutKeyboardFunc(key1);
     glEnable(GL_DEPTH_TEST);
@@ -462,7 +460,6 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display2);
     glutReshapeFunc(reshape2);
-    glutSpecialFunc(special2);
     glutMouseFunc(mouse_func);
     glutKeyboardFunc(key2);
     glEnable(GL_DEPTH_TEST);
@@ -472,7 +469,6 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display3);
     glutReshapeFunc(reshape3);
-    glutSpecialFunc(special3);
     glutMouseFunc(mouse_func);
     glutKeyboardFunc(key3);
     glEnable(GL_DEPTH_TEST);
@@ -482,13 +478,12 @@ int main(int argc,char* argv[])
     //  Set callbacks
     glutDisplayFunc(display4);
     glutReshapeFunc(reshape4);
-    glutSpecialFunc(special4);
     glutMouseFunc(mouse_func);
     glutKeyboardFunc(key4);
     glEnable(GL_DEPTH_TEST);
 
-    glutPostRedisplay();
 
+    glutIdleFunc(idleLoop);
     //  Pass control to GLUT so it can interact with the user
     glutMainLoop();
     return 0;
