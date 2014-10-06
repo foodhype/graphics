@@ -36,6 +36,16 @@ char* text[] = {"Outline","Filled Outline","Star Outline","Filled Star","Triangl
 #define Cos(th) cos(3.1415927/180*(th))
 #define Sin(th) sin(3.1415927/180*(th))
 
+//#ifndef GLAPIENTRY
+//#define GLAPIENTRY
+//#endif
+
+void APIENTRY gluTessCallback(GLUtesselator* tess,GLenum which, _GLUfuncptr CallBackFunc);
+
+#ifndef GLAPIENTRY
+void () { }
+#endif
+
 /*
  *  Convenience routine to output raster text
  *  Use VARARGS to make this more flexible
@@ -88,6 +98,7 @@ void TesselatedStar(int star,int type,int hole,int rule)
     if (type==GL_LINE) glLineWidth(3);
     //  Set winding rule
     gluTessProperty(tess,GLU_TESS_WINDING_RULE,rule);
+
     //  Set callbacks
     gluTessCallback(tess,GLU_TESS_BEGIN  ,glBegin);
     gluTessCallback(tess,GLU_TESS_END    ,glEnd);
