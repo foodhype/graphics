@@ -63,7 +63,7 @@ void bres(int x1,int y1,int x2,int y2) {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    bres(200, 50, 100, 50);
+    bres(200, 50, 100, 100);
     glFlush();
 }
 

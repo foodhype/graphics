@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <string.h>
+#include <time.h>
 #ifdef __APPLE__  // include Mac OS X verions of headers
 #  include <GLUT/glut.h>
 #else // non-Mac OS X operating systems
@@ -70,7 +72,7 @@ elapsed(void)
     difference = finish - begin;
     begin = finish;
     
-    return (float)difference/(float)CLK_TCK;
+    return (float)difference/(float)CLOCKS_PER_SEC;
 }
 
 void
