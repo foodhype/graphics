@@ -1,0 +1,7 @@
+To use glWindowPos2i, define it as a global:
+
+PFNGLWINDOWPOS2IPROC glWindowPos2i;
+
+In the main body of the program after gluInit, add:
+
+glWindowPos2i =  (PFNGLWINDOWPOS2IPROC) glutGetProcAddress("glWindowPos2i");
