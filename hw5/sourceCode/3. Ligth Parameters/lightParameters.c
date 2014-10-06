@@ -63,6 +63,8 @@ float ylight  =   0;  // Elevation of light
 #define Cos(th) cos(3.1415927/180*(th))
 #define Sin(th) sin(3.1415927/180*(th))
 
+PFNGLWINDOWPOS2IPROC glWindowPos2i;
+
 /*
  *  Convenience routine to output raster text
  *  Use VARARGS to make this more flexible
@@ -447,6 +449,8 @@ int main(int argc,char* argv[])
 {
    //  Initialize GLUT
    glutInit(&argc,argv);
+   glWindowPos2i =  (PFNGLWINDOWPOS2IPROC) glutGetProcAddress("glWindowPos2i");
+
    //  Request double buffered, true color window with Z buffering at 600x600
    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
    glutInitWindowSize(600,600);
