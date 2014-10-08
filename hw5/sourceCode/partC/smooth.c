@@ -167,13 +167,8 @@ init(void)
     /* create new display lists */
     lists();
    
-    glEnable( GL_COLOR_MATERIAL );
-    float white[] = { 0.3f, 0.8f, 0.3f, 1.0f };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, white);
-
-
     glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
     
     glEnable(GL_DEPTH_TEST);
@@ -190,7 +185,7 @@ reshape(int width, int height)
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, (GLfloat)height / (GLfloat)width, 1.0, 128.0);
+    gluPerspective(60.0, 4.0 / 3.0, 1.0, 128.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -3.0);
@@ -271,6 +266,7 @@ display(void)
     glutSwapBuffers();
     glEnable(GL_LIGHTING);
 }
+
 
 void
 keyboard(unsigned char key, int x, int y)
@@ -521,7 +517,7 @@ main(int argc, char** argv)
     DIR* dirp;
     int models;
     
-    glutInitWindowSize(512, 512);
+    glutInitWindowSize(640, 480);
     glutInit(&argc, argv);
     
     while (--argc) {
@@ -532,7 +528,7 @@ main(int argc, char** argv)
     }
     
     if (!model_file) {
-        model_file = "data/bunny.obj";
+        model_file = "data/simple.obj";
     }
     
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | buffering);
