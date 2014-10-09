@@ -361,9 +361,9 @@ display(void)
     }
 
     if (lighting) {
-        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
     } else {
-        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
     }
 
     if (depth_testing) {
@@ -373,7 +373,7 @@ display(void)
     }
     
     glutSwapBuffers();
-    //glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
 }
 
 
