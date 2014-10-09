@@ -17,3 +17,7 @@ n - toggle shading
 w - toggle between wireframe and polygons
 x - toggle depth testing
 c - toggle GL_CULL_FACE
+
+FOR PART I, TYPE 'r' KEY TO START THE DISPLAY
+
+For partI, tap the 'r' key to rotate the light.
