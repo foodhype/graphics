@@ -1,0 +1,14 @@
+To compile and run, go into any directory partA through partI and do "make run".
+
+CLICK THE WINDOW OR TYPE A KEY TO START THE DISPLAY!
+
+For partC, simply right click and go to models.
+
+For partH, the commands can be invoked by doing:
+s - zoom out
+S - zoom in
+l - toggle lighting
+n - toggle shading
+w - toggle between wireframe and polygons
+x - toggle depth testing
+c - toggle GL_CULL_FACE
