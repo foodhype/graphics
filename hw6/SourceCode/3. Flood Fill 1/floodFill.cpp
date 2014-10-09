@@ -42,6 +42,12 @@ void setPixelColor(GLint x, GLint y, Color color) {
     glFlush();
 }
 
+int steps[8][2] =
+{
+    {1, 0}, {0, 1}, {-1, 0}, {0, -1},
+    {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+};
+
 void floodFill(GLint x, GLint y, Color oldColor, Color newColor) {
     Color color;
     color = getPixelColor(x, y);
@@ -49,10 +55,11 @@ void floodFill(GLint x, GLint y, Color oldColor, Color newColor) {
     if(color.r == oldColor.r && color.g == oldColor.g && color.b == oldColor.b)
     {
         setPixelColor(x, y, newColor);
-        floodFill(x+1, y, oldColor, newColor);
-        floodFill(x, y+1, oldColor, newColor);
-        floodFill(x-1, y, oldColor, newColor);
-        floodFill(x, y-1, oldColor, newColor);
+
+        for (int i = 0; i < 8; ++i)
+        {
+            floodFill(x + steps[i][0], y + steps[i][1], oldColor, newColor);
+        }
     }
     return;
 }

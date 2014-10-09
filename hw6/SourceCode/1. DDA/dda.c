@@ -101,13 +101,37 @@ void menu (void) {
 }
 
 void dda_line (int x0, int y0, int x1, int y1) {
+
+    if (x0 == x1)
+    {
+        if (y0 == y1)
+        {
+            glBegin(GL_POINTS);
+            glColor3ub(255, 0, 0);            
+            glVertex2i(x0, y0);
+            glEnd();
+        }
+        int inc = (y0 < y1) ? 1 : -1;
+
+        glBegin(GL_POINTS);
+        glColor3ub(255, 0, 0);
+        while (y0 != y1)
+        {
+            glVertex2i(x0, y0);
+            y0 += inc;
+        }
+        glEnd();
+
+        return;
+    }
+
     int   x;
     float y = y0;
     float m = (y - y1) / (x0 - x1);
     int i;
     
     /* this implementation only handles abs(slope) <= 1 */
-    assert (m >= -1 && m <= 1 && x0 <= x1);
+    // assert (m >= -1 && m <= 1 && x0 <= x1);
     
     glBegin (GL_POINTS);
     glColor3ub (255, 0, 0);     /* red */

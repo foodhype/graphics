@@ -124,6 +124,13 @@ void getpixel (int x, int y, int *r, int *g, int *b ) {
     }
 }
 
+
+int steps[8][2] =
+{
+    {1, 0}, {0, 1}, {-1, 0}, {0, -1},
+    {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+};
+
 //FLOODFILL recursively colors a pixel and all its neighbors.
 void floodfill (int x, int y, int r, int g, int b ) {
     int r1, g1, b1;
@@ -132,10 +139,12 @@ void floodfill (int x, int y, int r, int g, int b ) {
     // Is the pixel white? If so, color it, and check its four immediate neighbors.
     if ( r1 == 255 && g1 == 255 && b1 == 255 )  {
         putpixel ( x, y, r, g, b );
-        floodfill ( x+1, y, r, g, b );
-        floodfill ( x-1, y, r, g, b );
-        floodfill ( x, y+1, r, g, b );
-        floodfill ( x, y-1, r, g, b );
+
+        int i;
+        for (i = 0; i < 8; ++i)
+        {
+            floodfill(x + steps[i][0], y + steps[i][1], r, g, b);
+        }
     }
 }
 

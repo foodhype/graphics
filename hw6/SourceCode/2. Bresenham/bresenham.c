@@ -7,6 +7,9 @@
 
 #include <stdio.h>
 
+int startX, startY, stopX, stopY;
+int linetype, pointType, height = 500;
+
 void draw_pixel(int ix, int iy) {
     glBegin(GL_POINTS);
     glVertex2i( ix, iy);
@@ -61,9 +64,35 @@ void bres(int x1,int y1,int x2,int y2) {
     }
 }
 
+void mouse (int button, int state, int x, int y) {
+    switch (button) {
+        case GLUT_LEFT_BUTTON:
+            if (state == GLUT_DOWN) {
+                printf ("x = %d, y = %d\n", x, height-y);
+                if (pointType == 0) {
+                    startX = x;
+                    startY = height-y;
+                    pointType = 1;
+                } else {
+                    stopX = x;
+                    stopY = height-y;
+                    pointType = 0;
+                    glutPostRedisplay();
+                }
+            }
+            break;
+        case GLUT_RIGHT_BUTTON:
+            if (state == GLUT_DOWN)
+                exit (0);
+            break;
+        default:
+            break;
+    }
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    bres(200, 50, 100, 100);
+    bres(startX, startY, stopX, stopY);
     glFlush();
 }
 
@@ -80,10 +109,11 @@ int main(int argc, char** argv) {
     /* standard GLUT initialization */
     glutInit(&argc,argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB); /* default, not needed */
-    glutInitWindowSize(500,500); /* 500x500 pixel window */
+    glutInitWindowSize(height,height); /* 500x500 pixel window */
     glutInitWindowPosition(0,0); /* place window top left on display */
     glutCreateWindow("Bresenham's Algorithm"); /* window title */
     glutDisplayFunc(display); /* display callback invoked when window opened */
+    glutMouseFunc (mouse);
     myinit(); /* set attributes */
     glutMainLoop(); /* enter event loop */
 }
