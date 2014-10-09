@@ -300,29 +300,6 @@ display(void)
         glutSolidCube(2.0);
         glDisable(GL_BLEND);
     }
-/*
-   glLineWidth(2.5); 
-   glColor3f(1.0, 0.0, 0.0);
-   glBegin(GL_LINES);
-   glVertex3f(0.0, 0.0, 0.0);
-   glVertex3f(15, 0, 0);
-   glEnd();
-*/    
-
- //   printf("%d\n", model->numvertices);
-/*
-for (i = 1; i <= model->numvertices; i++) {
-                swap = model->vertices[3 * i + 1];
-                model->vertices[3 * i + 1] = model->vertices[3 * i + 2];
-                model->vertices[3 * i + 2] = -swap;
-            }
-*/
-    // printf("\n");
-    // int i;
-    // for (i = 3; i < model->numvertices * 3; i+=3) {
-    //     printf("%f %f %f\n", model->vertices[i + 1], model->vertices[i + 2],  model->vertices[i + 3]);
-    // }
-    // printf("\n");
 
     for (int i = 0; i < model->numtriangles; i++) {
         GLMtriangle triangle = model->triangles[i];
