@@ -14,8 +14,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#  include <OpenGL/OpenGL.h>
-#  include <GLUT/glut.h>
+//#  include <OpenGL/OpenGL.h>
+//#  include <GLUT/glut.h>
+
+#include <GL/gl.h>
+#include <GL/glut.h>
+
+
 #include "texture.h"
 
 /* user-defined type definition */

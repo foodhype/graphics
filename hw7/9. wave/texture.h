@@ -7,8 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
-#  include <OpenGL/OpenGL.h>
-#  include <GLUT/glut.h>
+//#  include <OpenGL/OpenGL.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
+//#include "OpenGL/OpenGL.h"
+//#  include <GLUT/glut.h>
 
 // Type definitions
 typedef struct _ImageRec {
