@@ -28,12 +28,12 @@ void keyboardFunc(unsigned char, int, int);
 void mouseFunc(int button, int state, int x, int y);
 void initialize();
 void render();
-void mirror(GLfloat val);
+void mirror_front(GLfloat val);
 void mirror_top(GLfloat val);
 void mirror_bottom(GLfloat val);
 void mirror_left(GLfloat val);
 void mirror_right(GLfloat val);
-void mirror_front(GLfloat val);
+void mirror_back(GLfloat val);
 
 //-----------------------------------------------------------------------------
 // global variables and #defines
@@ -218,149 +218,162 @@ void displayFunc( )
     GLint buffers = GL_NONE;
     
     // get the current color buffer being drawn to
-    glGetIntegerv(GL_DRAW_BUFFER, &buffers );
+    glGetIntegerv(GL_DRAW_BUFFER, &buffers);
     
-    glPushMatrix( );
+    glPushMatrix();
     // rotate the viewpoint
-    glRotatef( angle += g_inc, 0.0f, 1.0f, 0.0f );
+    glRotatef(angle += g_inc, 0.0f, 1.0f, 0.0f);
     
     // set the clear value
-    glClearStencil( 0x0 );
+    glClearStencil(0x0);
     // clear the stencil buffer
     glClear( GL_STENCIL_BUFFER_BIT );
     // always pass the stencil test
-    glStencilFunc(GL_ALWAYS, 0x1, 0x1 );
+    glStencilFunc(GL_ALWAYS, 0x1, 0x1);
     // set the operation to modify the stencil buffer
-    glStencilOp( GL_REPLACE, GL_REPLACE, GL_REPLACE );
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     // disable drawing to the color buffer
-    glDrawBuffer( GL_NONE );
+    glDrawBuffer(GL_NONE);
     // enable stencil
-    glEnable( GL_STENCIL_TEST );
+    glEnable(GL_STENCIL_TEST);
     
     // draw the stencil mask
-    glBegin( GL_QUADS );
-    mirror( val );
+    glBegin(GL_QUADS);
+    mirror_front(val);
     glEnd();
 
-    glBegin( GL_QUADS );
-    mirror_top( val );
+    glBegin(GL_QUADS);
+    mirror_top(val);
     glEnd();
-   
-    glBegin( GL_QUADS );
-    mirror_bottom( val );
-    glEnd();
-    
-    glBegin( GL_QUADS );
-    mirror_left( val );
+   /*
+    glBegin(GL_QUADS);
+    mirror_bottom(val);
     glEnd();
     
+    glBegin(GL_QUADS);
+    mirror_left(val);
+    glEnd();
+    
+    glBegin(GL_QUADS);
+    mirror_right(val);
+    glEnd();
+    */
 
+    glBegin(GL_QUADS);
+    mirror_back(val);
+    glEnd();
 
     // reenable drawing to color buffer
-    glDrawBuffer( (GLenum) buffers );
+    glDrawBuffer((GLenum) buffers);
     // make stencil buffer read only
-    glStencilOp( GL_KEEP, GL_KEEP, GL_KEEP );
-    
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     
     // clear the color and depth buffers
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // draw the mirror image
     glPushMatrix();
     // invert image about xy plane
-    glScalef( 1.0f, 1.0f, -1.0f );
+    glScalef(1.0f, 1.0f, -1.0f);
     
     // invert the clipping plane based on the view point
-    if( cos( angle * M_PI / 180.0 ) < 0.0 )
+    if (cos(angle * M_PI / 180.0) < 0.0) {
         eqn1[2] = -1.0;
-    else
+    } else {
         eqn1[2] = 1.0;
+    }
     
     // clip one side of the plane
-    glClipPlane( GL_CLIP_PLANE0, eqn1 );
-    glEnable( GL_CLIP_PLANE0 );
+    glClipPlane(GL_CLIP_PLANE0, eqn1);
+    glEnable(GL_CLIP_PLANE0);
     
     // draw only where the stencil buffer == 1
-    glStencilFunc( GL_EQUAL, 0x1, 0x1 );
+    glStencilFunc(GL_EQUAL, 0x1, 0x1);
     // draw the object
     render();
     
     // turn off clipping plane
-    glDisable( GL_CLIP_PLANE0 );
-    glPopMatrix( );
+    glDisable(GL_CLIP_PLANE0);
+    glPopMatrix();
     
     // disable the stencil buffer
-    glDisable( GL_STENCIL_TEST );
+    glDisable(GL_STENCIL_TEST);
     // disable drawing to the color buffer
-    glDrawBuffer( GL_NONE );
+    glDrawBuffer(GL_NONE);
     
+    // TODO: Do we want to leave this commented out?
     // draw the mirror pane into depth buffer -
     // to prevent object behind mirror from being render
-//    glBegin( GL_QUADS );
-//    mirror( val );
-//    glEnd();
+    glBegin(GL_QUADS);
+    mirror_front(val);
+    glEnd();
     
     // enable drawing to the color buffer
-    glDrawBuffer( (GLenum) buffers );
+    glDrawBuffer((GLenum) buffers);
     
     // draw the normal image, without stencil test
-    glPushMatrix( );
+    glPushMatrix();
     render();
-    glPopMatrix( );
+    glPopMatrix();
     
     // draw the outline of the mirror
-    glColor3f( 0.4f, 0.4f, 1.0f );
-    glBegin( GL_LINE_LOOP );
-    mirror( val );
-    glEnd( );
+    glColor3f(0.4f, 0.4f, 1.0f);
+    glBegin(GL_LINE_LOOP);
+    mirror_front(val);
+    glEnd();
     
     // mirror shine
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glEnable( GL_BLEND );
-    glDepthMask( GL_FALSE );
-    glDepthFunc( GL_LEQUAL );
-    glDisable( GL_LIGHTING );
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_LEQUAL);
+    glDisable(GL_LIGHTING);
     
-    glColor4f( 1.0f, 1.0f, 1.0f, .2f );
-    glTranslatef( 0.0f, 0.0f, 0.001f * eqn1[2] );
-    glBegin( GL_QUADS );
-    mirror( val );
-    glEnd( );
+    glColor4f(1.0f, 1.0f, 1.0f, .2f);
+    glTranslatef(0.0f, 0.0f, 0.001f * eqn1[2]);
+    glBegin(GL_QUADS);
+    mirror_front(val);
+    glEnd();
    
-    glBegin( GL_QUADS );
-    mirror_top( val );
-    glEnd( );
+    glBegin(GL_QUADS);
+    mirror_top(val);
+    glEnd();
     
-    glBegin( GL_QUADS );
-    mirror_bottom( val );
-    glEnd( );
-    
-    glBegin( GL_QUADS );
-    mirror_left( val );
-    glEnd( );
-    
+    glBegin(GL_QUADS);
+    mirror_left(val);
+    glEnd();
 
+   /* 
+    glBegin(GL_QUADS);
+    mirror_bottom(val);
+    glEnd();
+    
+    glBegin(GL_QUADS);
+    mirror_right(val);
+    glEnd();
 
-    glDisable( GL_BLEND );
-    glDepthMask( GL_TRUE );
-    glDepthFunc( GL_LESS );
-    glEnable( GL_LIGHTING );
+    glBegin(GL_QUADS);
+    mirror_back(val);
+    glEnd();
+*/
+
+    glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_LIGHTING);
     
-    glPopMatrix( );
+    glPopMatrix();
     
-    glFlush( );
-    glutSwapBuffers( );
+    glFlush();
+    glutSwapBuffers();
 }
-
-
-
 
 
 //-----------------------------------------------------------------------------
 // Name: mirror( )
 // Desc: draws mirror pane
 //-----------------------------------------------------------------------------
-void mirror(GLfloat val)
+void mirror_front(GLfloat val)
 {
     glVertex3f(val, val, 0.0f);
     glVertex3f(-val, val, 0.0f);
@@ -394,32 +407,30 @@ void mirror_left(GLfloat val)
 
 void mirror_right( GLfloat val )
 {
+    glVertex3f(-val, -val, 0.0f);
+    glVertex3f(-val, -val, 2.0f * val);
+    glVertex3f(-val, val, 2.0f * val);
     glVertex3f(-val, val, 0.0f);
-    glVertex3f(val, val, 2.0f * val);
-    glVertex3f(val, -val, 2.0f * val);
-    glVertex3f(val, -val, 0.0f);
 }
 
-
+void mirror_back( GLfloat val )
+{
+    glVertex3f(-val, -val, 2.0f * val);
+    glVertex3f(val, -val, 2.0f * val);
+    glVertex3f(val, val, 2.0f * val);
+    glVertex3f(-val, val, 2.0f * val);
+}
 
 
 //-----------------------------------------------------------------------------
 // Name: render( )
 // Desc: draws scene
 //-----------------------------------------------------------------------------
-void render( )
-{
-    glLightfv( GL_LIGHT0, GL_POSITION, g_light0_pos );
-    
-/*    glPushMatrix();
-    glTranslatef( 0.0f, 0.0f, -0.7f );
-    glColor3f( 1.0f, .4f, .4f );
-    glutSolidCube( .3 );
-    glPopMatrix();
-  */  
+void render() {
+    glLightfv(GL_LIGHT0, GL_POSITION, g_light0_pos);    
     glPushMatrix();
-    glTranslatef( 0.0f, 0.0f, 1.0f );
-    glColor3f( .9f, .4f, .9f );
-    glutSolidCube( .3f );
+    glTranslatef(0.0f, 0.0f, 1.0f);
+    glColor3f(.9f, .4f, .9f);
+    glutSolidCube(.3f);
     glPopMatrix();
 }
