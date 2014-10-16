@@ -51,7 +51,9 @@ GLsizei g_height = 360;
 GLboolean g_rotate = GL_TRUE;
 
 // light 0 position
-GLfloat g_light0_pos[4] = {10.0f, 5.0f, 0.0f, 1.0f};
+GLfloat g_light0_pos[4] = {30.0f, 15.0f, 0.0f, 1.0f};
+GLfloat g_light1_pos[4] = {0.0f, 0.0f, 2.0f, 0.0f};
+GLfloat g_light2_pos[4] = {10.0f, 7.0f, 0.0f, 1.0f};
 
 // clipping planes
 GLdouble eqn1[4] = {0.0, 0.0, 1.0, 0.0};
@@ -124,6 +126,8 @@ void initialize() {
     
     // enable light 0
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT2);
 }
 
 
@@ -304,9 +308,9 @@ void displayFunc( )
     // TODO: Do we want to leave this commented out?
     // draw the mirror pane into depth buffer -
     // to prevent object behind mirror from being render
-    glBegin(GL_QUADS);
-    mirror_front(val);
-    glEnd();
+    //glBegin(GL_QUADS);
+    //mirror_front(val);
+    //glEnd();
     
     // enable drawing to the color buffer
     glDrawBuffer((GLenum) buffers);
@@ -343,7 +347,7 @@ void displayFunc( )
     mirror_left(val);
     glEnd();
 
-   /* 
+/*    
     glBegin(GL_QUADS);
     mirror_bottom(val);
     glEnd();
@@ -427,8 +431,11 @@ void mirror_back( GLfloat val )
 // Desc: draws scene
 //-----------------------------------------------------------------------------
 void render() {
-    glLightfv(GL_LIGHT0, GL_POSITION, g_light0_pos);    
     glPushMatrix();
+    glLightfv(GL_LIGHT0, GL_POSITION, g_light0_pos);    
+    glLightfv(GL_LIGHT1, GL_POSITION, g_light1_pos);    
+    glLightfv(GL_LIGHT2, GL_POSITION, g_light2_pos);    
+ 
     glTranslatef(0.0f, 0.0f, 1.0f);
     glColor3f(.9f, .4f, .9f);
     glutSolidCube(.3f);
