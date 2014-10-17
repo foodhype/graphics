@@ -1,7 +1,0 @@
-Name: Brian Schmitz
-EID: bns583
-
-To run, simply run:
-make
-
-Quaternions are implemented by treating real numbers like complex numbers in terms of operations. The advantage here is that imaginary numbers are cyclic, so from a computational perspective we can skip intermediate operations that would be necessary otherwise to arrive at the same result.
